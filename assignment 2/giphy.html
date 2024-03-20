@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Giphy API Demo</title>
+    <style>
+      #gif-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 100px; /* Adjusted margin to account for header height */
+      }
+      .gif {
+        margin: 10px;
+      }
+      header {
+        background-color: aqua;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 80px;
+        padding: 20px 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 99;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        padding-top: 80px; /* Added padding to the top to account for the header */
+      }
+
+      .centered-container {
+        text-align: center;
+      }
+
+      input[type="text"],
+      button {
+        margin: 5px;
+        padding: 10px;
+        font-size: 16px;
+      }
+
+      button {
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Giphy API fetching</h1>
+    </header>
+    <input type="text" id="search" placeholder="Enter search term" />
+    <button onclick="searchGifs()">Search</button>
+    <div id="gif-container"></div>
+    <script>
+      async function searchGifs() {
+        const searchInput = document.getElementById("search").value;
+        const apiKey = "DfufWJY1J6c26PvdNASi8e1TQJtV06Th";
+        const apiUrl = `https://api.giphy.com/v1/gifs/search?api_key=${apiKey}&q=${searchInput}&limit=10`;
+        try {
+          const response = await fetch(apiUrl);
+          const data = await response.json();
+          displayGifs(data.data);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      }
+      function displayGifs(gifs) {
+        const gifContainer = document.getElementById("gif-container");
+        gifContainer.innerHTML = "";
+        gifs.forEach((gif) => {
+          const gifUrl = gif.images.fixed_height.url;
+          const img = document.createElement("img");
+          img.src = gifUrl;
+          img.classList.add("gif");
+          gifContainer.appendChild(img);
+        });
+      }
+    </script>
+  </body>
+</html>
